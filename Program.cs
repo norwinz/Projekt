@@ -14,13 +14,13 @@ namespace Projekt
         {
             //userDB (string)
             string[,] userDB = new string[5, 4]
-            
+
             {//     USERID      LOGIN        PIN         NAME
-                {   "0",        "EP40",     "4040",     "Elias Pettersson" },  
-                {   "1",        "NH21",     "2121",     "Nils Höglander" },    
-                {   "2",        "BH53",     "5353",     "Bo Horvat" },         
-                {   "3",        "QH43",     "4343",     "Quinn Hughes" },      
-                {   "4",        "TM57",     "5757",     "Tyler Myers" },       
+                {   "0",        "EP40",     "4040",     "Elias Pettersson" },
+                {   "1",        "NH21",     "2121",     "Nils Höglander" },
+                {   "2",        "BH53",     "5353",     "Bo Horvat" },
+                {   "3",        "QH43",     "4343",     "Quinn Hughes" },
+                {   "4",        "TM57",     "5757",     "Tyler Myers" },
             };
 
             //accountDB (double)
@@ -34,50 +34,93 @@ namespace Projekt
 
             };
 
-            int ID=99; //Placeholder value
+            //VAR LIST
+            int ID = 99; //Placeholder value
             int loginAtempt = 3;
             
-            //LOGIN SCREEN
-            Console.WriteLine("Välkommen till Canucks-bank");
-            while (loginAtempt > 0)
-            {
-                Console.WriteLine("Vänligen mata in dina inloggningsuppgifter:");
-                Console.WriteLine("Användar-ID: ");
-                string user = Console.ReadLine();
-                Console.WriteLine("PIN: ");
-                string pinString = Console.ReadLine();
 
-                for (int i = 0; i < 5; i++)
+            while (true)
+            {
+                //LOGIN SCREEN
+                Console.WriteLine("Välkommen till Canucks-bank");
+                while (loginAtempt > 0)
                 {
-                    if (user == userDB[i, 1] && pinString == userDB[i, 2])
+                    Console.WriteLine("Vänligen mata in dina inloggningsuppgifter:");
+                    Console.WriteLine("Användar-ID: ");
+                    string user = Console.ReadLine();
+                    Console.WriteLine("PIN: ");
+                    string pinString = Console.ReadLine();
+
+                    for (int i = 0; i < 5; i++)
                     {
-                        ID = i; //Add the logged in userID value
-                        
-                        i = 5;
-                        loginAtempt = 0;
-                    }                                   
-                    else
-                    {
-                        loginAtempt--;
-                        Console.Clear();
-                        Console.WriteLine("Fel ID eller PIN. \nVänligen försök igen.\n");
-                        if (loginAtempt > 0)
+                        if (user == userDB[i, 1] && pinString == userDB[i, 2])
                         {
-                            Console.WriteLine("Du har {0} försök kvar innan programmet stängs.\n", loginAtempt);
+                            ID = i; //Add the logged in userID value
+
+                            i = 5;
+                            loginAtempt = 0;
                         }
                         else
                         {
-                            Console.WriteLine("För många misslyckade inloggningsförsök. Programmet stängs.");
-                            return;
+                            loginAtempt--;
+                            Console.Clear();
+                            Console.WriteLine("Fel ID eller PIN. \nVänligen försök igen.\n");
+                            if (loginAtempt > 0)
+                            {
+                                Console.WriteLine("Du har {0} försök kvar innan programmet stängs.\n", loginAtempt);
+                            }
+                            else
+                            {
+                                Console.WriteLine("För många misslyckade inloggningsförsök. Programmet stängs.");
+                                return;
+                            }
+                            i = 5;
                         }
-                        i = 5;
                     }
-                }               
-            }//End of login while loop
-            Console.WriteLine("Välkommen {0}!\n", userDB[ID, 3]);
-            //MENU SCREEN
-            Console.WriteLine("1.Se dina konton och saldo\n2.Överföring mellan konton\n3.Ta ut pengar\n4.Logga ut");
+                }//End of login while loop
+                Console.Clear();
+                Console.WriteLine("Välkommen {0}!\n", userDB[ID, 3]);
+                //MENU SCREEN
+                bool logOut =false;
+                while (logOut == false)
+                {
+                    Console.WriteLine("1.Se dina konton och saldo\n2.Överföring mellan konton\n3.Ta ut pengar\n4.Logga ut");
+                    string menuOption = Console.ReadLine();
+                    switch (menuOption)
+                    {
+                        case "1":
+                            {
+                                Console.WriteLine("Konton och saldo");
+                                continue;
+                            }
+                        case "2":
+                            {
+                                Console.WriteLine("Överföring");
+                                continue;
+                            }
+                        case "3":
+                            {
+                                Console.WriteLine("Ta ut pengar");
+                                continue;
+                            }
+                        case "4":
+                            {
+                                loginAtempt = 3;
+                                logOut = true;
+                                Console.Clear();
+                                break;
+                                
+                            }
+                        default:
+                            {
+                                Console.WriteLine("Skriv en siffra i menyn.");
+                                continue;
+                            }
+                    }
+
+                }
+            }
+
         }
-        
     }
 }
