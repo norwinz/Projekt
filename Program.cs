@@ -5,6 +5,7 @@
             Final project of "Utveckling med C# och .NET"
 */
 using System;
+using System.Threading;
 
 namespace Projekt
 {
@@ -83,7 +84,7 @@ namespace Projekt
                     }
 
                 }//End of login while loop
-                
+
 
                 Console.Clear();
                 Console.WriteLine("Välkommen {0}!\n", userDB[ID, 3]); //Welcome Message
@@ -116,6 +117,13 @@ namespace Projekt
                             }
                         case "4":
                             {
+                                Console.WriteLine("Du loggas nu ut.");
+                                for(int i=0;i<=5;i++)
+                                {
+                                    Thread.Sleep(400);
+                                    Console.Write(".");
+
+                                }
                                 loginAtempt = 3;
                                 logOut = true;
                                 Console.Clear();
@@ -132,9 +140,10 @@ namespace Projekt
 
                 }
             }
-            //Function to diplay user account info
-            static void accountDisplay(int userID, double?[,] accDB, string[] stringList)
-            {
+            
+        }    
+        static void accountDisplay(int userID, double?[,] accDB, string[] stringList) //Method to diplay user account info
+        {
                 Console.Clear();
                 for (int i = 1; i < 6; i++)
                 {
@@ -148,7 +157,7 @@ namespace Projekt
                 }
                 
             }
-        }   
+           
         static void exitOption()
         {
             Console.WriteLine("\n\nTryck enter för att gå tillbaka till menyn");
