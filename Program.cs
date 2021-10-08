@@ -37,7 +37,8 @@ namespace Projekt
             //VAR LIST
             int ID = 99; //Placeholder value
             int loginAtempt = 3;
-            
+            bool successLogin = false;
+
 
             while (true)
             {
@@ -50,7 +51,7 @@ namespace Projekt
                     string user = Console.ReadLine();
                     Console.WriteLine("PIN: ");
                     string pinString = Console.ReadLine();
-
+                    successLogin = false;
                     for (int i = 0; i < 5; i++)
                     {
                         if (user == userDB[i, 1] && pinString == userDB[i, 2])
@@ -59,29 +60,33 @@ namespace Projekt
 
                             i = 5;
                             loginAtempt = 0;
+                            successLogin = true;
+                        }
+                    }
+                    if (!successLogin)
+                    {
+                        loginAtempt--;
+                        Console.Clear();
+                        Console.WriteLine("Fel ID eller PIN. \nVänligen försök igen.\n");
+                        if (loginAtempt > 0)
+                        {
+                            Console.WriteLine("Du har {0} försök kvar innan programmet stängs.\n", loginAtempt);
                         }
                         else
                         {
-                            loginAtempt--;
-                            Console.Clear();
-                            Console.WriteLine("Fel ID eller PIN. \nVänligen försök igen.\n");
-                            if (loginAtempt > 0)
-                            {
-                                Console.WriteLine("Du har {0} försök kvar innan programmet stängs.\n", loginAtempt);
-                            }
-                            else
-                            {
-                                Console.WriteLine("För många misslyckade inloggningsförsök. Programmet stängs.");
-                                return;
-                            }
-                            i = 5;
+                            Console.WriteLine("För många misslyckade inloggningsförsök. Programmet stängs.");
+                            return;
                         }
+
                     }
+
                 }//End of login while loop
+                loginAtempt = 3;
+
                 Console.Clear();
                 Console.WriteLine("Välkommen {0}!\n", userDB[ID, 3]);
                 //MENU SCREEN
-                bool logOut =false;
+                bool logOut = false;
                 while (logOut == false)
                 {
                     Console.WriteLine("1.Se dina konton och saldo\n2.Överföring mellan konton\n3.Ta ut pengar\n4.Logga ut");
@@ -91,6 +96,7 @@ namespace Projekt
                         case "1":
                             {
                                 Console.WriteLine("Konton och saldo");
+                                accountDisplay(ID, accountDB);
                                 continue;
                             }
                         case "2":
@@ -109,7 +115,7 @@ namespace Projekt
                                 logOut = true;
                                 Console.Clear();
                                 break;
-                                
+
                             }
                         default:
                             {
@@ -120,7 +126,21 @@ namespace Projekt
 
                 }
             }
+            static void accountDisplay(int userID, double?[,] accDB)
+            {
 
+                for (int i = 1; i < 5; i++)
+                {
+                    if (accDB[userID, i] != null && i == 1)
+                    {
+                        Console.WriteLine("Lönekonto: {0}", accDB[userID, 1]);
+                    }
+                    if (accDB[userID, i] != null && i == 2)
+                    {
+                        Console.WriteLine("Sparkonto: {0}", accDB[userID, 2]);
+                    }
+                }
+            }
         }
     }
 }
