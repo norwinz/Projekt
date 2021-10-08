@@ -34,6 +34,7 @@ namespace Projekt
 
             };
 
+            string[] accountList = { "Lönekonto", "Sparkonto", "Aktiekonto", "Bilkonto", "Semesterkonto" };
             //VAR LIST
             int ID = 99; //Placeholder value
             int loginAtempt = 3;
@@ -74,6 +75,7 @@ namespace Projekt
                         }
                         else
                         {
+                            Console.Clear();
                             Console.WriteLine("För många misslyckade inloggningsförsök. Programmet stängs.");
                             return;
                         }
@@ -81,10 +83,10 @@ namespace Projekt
                     }
 
                 }//End of login while loop
-                loginAtempt = 3;
+                
 
                 Console.Clear();
-                Console.WriteLine("Välkommen {0}!\n", userDB[ID, 3]);
+                Console.WriteLine("Välkommen {0}!\n", userDB[ID, 3]); //Welcome Message
                 //MENU SCREEN
                 bool logOut = false;
                 while (logOut == false)
@@ -96,18 +98,21 @@ namespace Projekt
                         case "1":
                             {
                                 Console.WriteLine("Konton och saldo");
-                                accountDisplay(ID, accountDB);
-                                continue;
+                                accountDisplay(ID, accountDB, accountList);
+                                exitOption();
+                                break;
                             }
                         case "2":
                             {
                                 Console.WriteLine("Överföring");
-                                continue;
+                                exitOption();
+                                break;
                             }
                         case "3":
                             {
                                 Console.WriteLine("Ta ut pengar");
-                                continue;
+                                exitOption();
+                                break;
                             }
                         case "4":
                             {
@@ -119,28 +124,36 @@ namespace Projekt
                             }
                         default:
                             {
-                                Console.WriteLine("Skriv en siffra i menyn.");
+                                Console.Clear();
+                                Console.WriteLine("Ogiltigt val.\nSkriv en siffra i menyn.\n\n");
                                 continue;
                             }
                     }
 
                 }
             }
-            static void accountDisplay(int userID, double?[,] accDB)
+            //Function to diplay user account info
+            static void accountDisplay(int userID, double?[,] accDB, string[] stringList)
             {
-
-                for (int i = 1; i < 5; i++)
+                Console.Clear();
+                for (int i = 1; i < 6; i++)
                 {
-                    if (accDB[userID, i] != null && i == 1)
+                    if (accDB[userID, i] != null)
                     {
-                        Console.WriteLine("Lönekonto: {0}", accDB[userID, 1]);
-                    }
-                    if (accDB[userID, i] != null && i == 2)
-                    {
-                        Console.WriteLine("Sparkonto: {0}", accDB[userID, 2]);
-                    }
+                        int listFix = i - 1;
+                        
+                        Console.WriteLine("{0}: {1} SEK",stringList[listFix], accDB[userID, i]);
+                        
+                    }                                     
                 }
+                
             }
+        }   
+        static void exitOption()
+        {
+            Console.WriteLine("\n\nTryck enter för att gå tillbaka till menyn");
+            Console.ReadLine();
+            Console.Clear();
         }
     }
 }
