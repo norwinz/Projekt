@@ -33,6 +33,51 @@ namespace Projekt
                 {   4,          5757.57,    57.57,      57000,      5.7,        0.57},
 
             };
+
+            int ID=99; //Placeholder value
+            int loginAtempt = 3;
+            
+            //LOGIN SCREEN
+            Console.WriteLine("Välkommen till Canucks-bank");
+            while (loginAtempt > 0)
+            {
+                Console.WriteLine("Vänligen mata in dina inloggningsuppgifter:");
+                Console.WriteLine("Användar-ID: ");
+                string user = Console.ReadLine();
+                Console.WriteLine("PIN: ");
+                string pinString = Console.ReadLine();
+
+                for (int i = 0; i < 5; i++)
+                {
+                    if (user == userDB[i, 1] && pinString == userDB[i, 2])
+                    {
+                        ID = i; //Add the logged in userID value
+                        
+                        i = 5;
+                        loginAtempt = 0;
+                    }                                   
+                    else
+                    {
+                        loginAtempt--;
+                        Console.Clear();
+                        Console.WriteLine("Fel ID eller PIN. \nVänligen försök igen.\n");
+                        if (loginAtempt > 0)
+                        {
+                            Console.WriteLine("Du har {0} försök kvar innan programmet stängs.\n", loginAtempt);
+                        }
+                        else
+                        {
+                            Console.WriteLine("För många misslyckade inloggningsförsök. Programmet stängs.");
+                            return;
+                        }
+                        i = 5;
+                    }
+                }               
+            }//End of login while loop
+            Console.WriteLine("Välkommen {0}!\n", userDB[ID, 3]);
+            //MENU SCREEN
+            Console.WriteLine("1.Se dina konton och saldo\n2.Överföring mellan konton\n3.Ta ut pengar\n4.Logga ut");
         }
+        
     }
 }
