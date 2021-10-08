@@ -48,7 +48,7 @@ namespace Projekt
                 Console.WriteLine("Välkommen till Canucks-bank");
                 while (loginAtempt > 0)
                 {
-                    Console.WriteLine("Vänligen mata in dina inloggningsuppgifter:");
+                    Console.WriteLine("Vänligen mata in dina inloggningsuppgifter.");
                     Console.WriteLine("Användar-ID: ");
                     string user = Console.ReadLine();
                     Console.WriteLine("PIN: ");
