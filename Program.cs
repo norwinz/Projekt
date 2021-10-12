@@ -105,14 +105,14 @@ namespace Projekt
                             }
                         case "2":
                             {
-                                Console.WriteLine("Överföring");
+                                
                                 accountDB=accountTransfer(ID, accountDB, accountList);
                                 exitOption();
                                 break;
                             }
                         case "3":
                             {
-                                Console.WriteLine("Ta ut pengar");
+                                accountDB = withdraw(ID, accountDB, accountList, userDB);
                                 exitOption();
                                 break;
                             }
@@ -196,7 +196,7 @@ namespace Projekt
             }
             if (amountTransfer > accDB[userID, fromAccount])
             {
-                Console.WriteLine("Valt belopp överstinger kontots saldo.");
+                Console.WriteLine("Valt belopp överstiger kontots saldo.");
                 exitOption();
             }
             else
@@ -221,7 +221,8 @@ namespace Projekt
                     }
                     else if (approve == "AVBRYT")
                     {
-                        exitOption();
+                        approveBool = true;
+                        
                     }
                     else
                     {
@@ -232,7 +233,7 @@ namespace Projekt
             }
             return accDB;
         }
-        static int getaccountID(int userID, double?[,] accDB, string[] accList)
+        static int getaccountID(int userID, double?[,] accDB, string[] accList) //Method to get accountID without fail
         {
             bool numberBool = false;
             bool accountBool = true;
@@ -293,6 +294,75 @@ namespace Projekt
             Console.WriteLine("\n\nTryck enter för att gå tillbaka till menyn");
             Console.ReadLine();
             Console.Clear();
+        }
+        static double?[,] withdraw(int userID, double?[,] accDB, string[] accList, string[,] accounts)
+        {
+            Console.WriteLine("Från vilket konto vill du ta ut pengar?");
+            int account = getaccountID(userID, accDB, accList);
+            bool numberBool = false;
+            double amountTransfer = 0;
+            int listfix = account - 1;
+            while (numberBool == false)
+            {
+                Console.WriteLine("Hur mycket vill du ta ut?");
+                string amountTransferString = Console.ReadLine();
+
+                try
+                {
+                    amountTransfer = Convert.ToDouble(amountTransferString);
+                    numberBool = true;
+                    if (amountTransfer < 0)
+                    {
+                        Console.WriteLine("Ej möjligt att ta ut mindre än 0 SEK");
+                        numberBool = false;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Du måste skriva ett nummer");
+                    numberBool = false;
+                }
+            }
+            if (amountTransfer > accDB[userID, account])
+            {
+                Console.WriteLine("Valt belopp överstiger kontots saldo.");
+                exitOption();
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Du kommer ta ut {0} SEK från {1}.", amountTransfer, accList[listfix]);
+
+                bool approveBool = false;
+                while (approveBool == false)
+                {
+                    Console.WriteLine("Mata in din pinkod för att godkänna.\nSkriv 'Avbryt' för att avbryta");
+                    string approve = Console.ReadLine().ToUpper();
+                    if (approve == accounts[userID,2])
+                    {
+                        approveBool = true;
+                        accDB[userID, account] = accDB[userID, account] - amountTransfer;
+                        
+                        Console.WriteLine("Överföringen är genomförd");
+                        Console.WriteLine("Nytt saldo:");
+                        Console.WriteLine("{0}: {1} SEK", accList[listfix], accDB[userID, account]);
+                        
+                    }
+                    else if (approve == "AVBRYT")
+                    {
+                        approveBool = true;
+
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Fel pinkod.");
+                        
+                    }
+                }
+
+            }
+            return accDB;
         }
     }
 }
