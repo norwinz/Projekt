@@ -160,21 +160,91 @@ namespace Projekt
         }
         static double?[,] accountTransfer(int userID, double?[,] accDB, string[] accList) //Method to transfer money between accounts
             {
-            double?[,] newDB= accDB;
+            
             Console.Clear();
-            Console.WriteLine("Överförning mellan konton");           
-            //accountDisplay(userID, accDB, accList);
-            //Start of transfer
-            bool numberBool = false;
-            bool accountBool = true;
-            int firstaccountInt = 0;
-            while (numberBool == false || accountBool == false)
+            Console.WriteLine("Överförning mellan konton");
+            Console.WriteLine("Välj vilket konto du vill flytta pengar FRÅN");
+            int fromAccount = getaccountID(userID, accDB, accList);
+            Console.WriteLine("Välj vilket konto du vill flytta pengar TILL");
+            int toAccount = getaccountID(userID, accDB, accList);
+            int listfixFrom = fromAccount - 1;
+            int listfixTo = toAccount - 1;
+            Console.WriteLine("Från: {0}: {1} SEK", accList[listfixFrom], accDB[userID,fromAccount]);
+            Console.WriteLine("Till: {0}: {1} SEK", accList[listfixTo], accDB[userID,toAccount]);
+            bool numberBool=false;
+            double amountTransfer = 0;
+            while (numberBool == false)
             {
-                accountDisplay(userID, accDB, accList);
-                Console.WriteLine("Från vilket konto vill du flytta pengar?");
+                Console.WriteLine("Hur mycket vill du flytta?");
+                string amountTransferString = Console.ReadLine();
+                
                 try
                 {
-                    firstaccountInt = Convert.ToInt32(Console.ReadLine());
+                    amountTransfer = Convert.ToDouble(amountTransferString);
+                    numberBool = true;
+                    if(amountTransfer<0)
+                    {
+                        Console.WriteLine("Ej möjligt att flytta mindre än 0 SEK");
+                        numberBool = false;
+                    }
+                }
+                catch
+                {                    
+                    Console.WriteLine("Du måste skriva ett nummer");
+                    numberBool = false;
+                }
+            }
+            if (amountTransfer > accDB[userID, fromAccount])
+            {
+                Console.WriteLine("Valt belopp överstinger kontots saldo.");
+                exitOption();
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Du kommer flytta {0} SEK från {1} till {2}.", amountTransfer, accList[listfixFrom], accList[listfixTo]);
+               
+                bool approveBool = false;
+                while (approveBool == false)
+                    {
+                    Console.WriteLine("Skriv 'Godkänn' för att starta överföringen.\nSkriv 'Avbryt' för att avbryta");
+                    string approve = Console.ReadLine().ToUpper();
+                    if (approve == "GODKÄNN")
+                    {
+                        approveBool = true;
+                        accDB[userID, fromAccount] = accDB[userID, fromAccount] - amountTransfer;
+                        accDB[userID, toAccount] = accDB[userID, toAccount] + amountTransfer;
+                        Console.WriteLine("Överföringen är genomförd");
+                        Console.WriteLine("Nytt saldo:");
+                        Console.WriteLine("{0}: {1} SEK", accList[listfixFrom], accDB[userID, fromAccount]);
+                        Console.WriteLine("{0}: {1} SEK", accList[listfixTo], accDB[userID, toAccount]);
+                    }
+                    else if (approve == "AVBRYT")
+                    {
+                        exitOption();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Skriv 'Godkänn' eller 'Avbryt'.");
+                    }
+                    }
+
+            }
+            return accDB;
+        }
+        static int getaccountID(int userID, double?[,] accDB, string[] accList)
+        {
+            bool numberBool = false;
+            bool accountBool = true;
+            int accountInt = 0;
+
+            while (numberBool == false || accountBool == false)
+            {
+                accountDisplay(userID, accDB, accList);                
+                Console.WriteLine("Välj konto");
+                try
+                {
+                    accountInt = Convert.ToInt32(Console.ReadLine());
                     numberBool = true;
                 }
                 catch
@@ -187,36 +257,36 @@ namespace Projekt
 
                 if (numberBool == true)
                 {
-                    if (firstaccountInt < 6)
+                    if (accountInt < 6)
                     {
 
 
-                        if (accDB[userID, firstaccountInt] != null)
+                        if (accDB[userID, accountInt] != null)
                         {
                             accountBool = true;
 
-                            Console.WriteLine("Success");
+                            
                         }
                         else
                         {
                             accountBool = false;
                             Console.Clear();
-                            Console.WriteLine("Du äger inget konto med den ID: {0}.", firstaccountInt);
+                            Console.WriteLine("Du äger inget konto med ID: {0}.", accountInt);
                         }
                     }
                     else
                     {
                         accountBool = false;
                         Console.Clear();
-                        Console.WriteLine("Du äger inget konto med den ID: {0}.", firstaccountInt);
+                        Console.WriteLine("Du äger inget konto med ID: {0}.", accountInt);
                     }
                 }
             }
-                
+            return accountInt;
+        }        
 
             
-            return newDB;
-            }
+            
         
         static void exitOption() //Method to go back to main menu
         {
