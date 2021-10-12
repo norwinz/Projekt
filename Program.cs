@@ -106,6 +106,7 @@ namespace Projekt
                         case "2":
                             {
                                 Console.WriteLine("Överföring");
+                                accountDB=accountTransfer(ID, accountDB, accountList);
                                 exitOption();
                                 break;
                             }
@@ -118,7 +119,7 @@ namespace Projekt
                         case "4":
                             {
                                 Console.WriteLine("Du loggas nu ut.");
-                                for(int i=0;i<=5;i++)
+                                for (int i = 0; i <= 5; i++)
                                 {
                                     Thread.Sleep(400);
                                     Console.Write(".");
@@ -140,25 +141,32 @@ namespace Projekt
 
                 }
             }
-            
-        }    
-        static void accountDisplay(int userID, double?[,] accDB, string[] stringList) //Method to diplay user account info
+
+        }
+        static void accountDisplay(int userID, double?[,] accDB, string[] accList) //Method to diplay user account info
         {
-                Console.Clear();
-                for (int i = 1; i < 6; i++)
+            Console.Clear();
+            Console.WriteLine("Konton: ");
+            for (int i = 1; i < 6; i++)
+            {
+                if (accDB[userID, i] != null)
                 {
-                    if (accDB[userID, i] != null)
-                    {
-                        int listFix = i - 1;
-                        
-                        Console.WriteLine("{0}: {1} SEK",stringList[listFix], accDB[userID, i]);
-                        
-                    }                                     
+                    int listFix = i - 1;
+
+                    Console.WriteLine("{0}: {1} SEK", accList[listFix], accDB[userID, i]);
+
                 }
-                
             }
-           
-        static void exitOption()
+
+        }
+        static double?[,] accountTransfer(int userID, double?[,] accDB, string[] accList) //Method to transfer money between accounts
+            {
+            double?[,] newDB=accDB;
+            newDB[userID, 1] = 100;
+            return newDB;
+            }
+        
+        static void exitOption() //Method to go back to main menu
         {
             Console.WriteLine("\n\nTryck enter för att gå tillbaka till menyn");
             Console.ReadLine();
