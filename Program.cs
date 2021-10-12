@@ -98,7 +98,7 @@ namespace Projekt
                     {
                         case "1":
                             {
-                                Console.WriteLine("Konton och saldo");
+                                Console.Clear();
                                 accountDisplay(ID, accountDB, accountList);
                                 exitOption();
                                 break;
@@ -129,7 +129,6 @@ namespace Projekt
                                 logOut = true;
                                 Console.Clear();
                                 break;
-
                             }
                         default:
                             {
@@ -145,7 +144,7 @@ namespace Projekt
         }
         static void accountDisplay(int userID, double?[,] accDB, string[] accList) //Method to diplay user account info
         {
-            Console.Clear();
+            
             Console.WriteLine("Konton: ");
             for (int i = 1; i < 6; i++)
             {
@@ -153,7 +152,7 @@ namespace Projekt
                 {
                     int listFix = i - 1;
 
-                    Console.WriteLine("{0}: {1} SEK", accList[listFix], accDB[userID, i]);
+                    Console.WriteLine("{0}. {1}: {2} SEK",i, accList[listFix], accDB[userID, i]);
 
                 }
             }
@@ -161,8 +160,61 @@ namespace Projekt
         }
         static double?[,] accountTransfer(int userID, double?[,] accDB, string[] accList) //Method to transfer money between accounts
             {
-            double?[,] newDB=accDB;
-            newDB[userID, 1] = 100;
+            double?[,] newDB= accDB;
+            Console.Clear();
+            Console.WriteLine("Överförning mellan konton");           
+            //accountDisplay(userID, accDB, accList);
+            //Start of transfer
+            bool numberBool = false;
+            bool accountBool = true;
+            int firstaccountInt = 0;
+            while (numberBool == false || accountBool == false)
+            {
+                accountDisplay(userID, accDB, accList);
+                Console.WriteLine("Från vilket konto vill du flytta pengar?");
+                try
+                {
+                    firstaccountInt = Convert.ToInt32(Console.ReadLine());
+                    numberBool = true;
+                }
+                catch
+                {
+                    Console.Clear();
+                    Console.WriteLine("Skriv en siffra");
+                    numberBool = false;
+                }
+
+
+                if (numberBool == true)
+                {
+                    if (firstaccountInt < 6)
+                    {
+
+
+                        if (accDB[userID, firstaccountInt] != null)
+                        {
+                            accountBool = true;
+
+                            Console.WriteLine("Success");
+                        }
+                        else
+                        {
+                            accountBool = false;
+                            Console.Clear();
+                            Console.WriteLine("Du äger inget konto med den ID: {0}.", firstaccountInt);
+                        }
+                    }
+                    else
+                    {
+                        accountBool = false;
+                        Console.Clear();
+                        Console.WriteLine("Du äger inget konto med den ID: {0}.", firstaccountInt);
+                    }
+                }
+            }
+                
+
+            
             return newDB;
             }
         
