@@ -42,7 +42,7 @@ namespace Projekt
             bool successLogin = false;
 
 
-            while (true)
+            while (true) //Main loop
             {
                 //LOGIN SCREEN
                 Console.WriteLine("Välkommen till Canucks-bank");
@@ -85,9 +85,9 @@ namespace Projekt
 
                 }//End of login while loop
 
-
                 Console.Clear();
                 Console.WriteLine("Välkommen {0}!\n", userDB[ID, 3]); //Welcome Message
+               
                 //MENU SCREEN
                 bool logOut = false;
                 while (logOut == false)
@@ -104,8 +104,7 @@ namespace Projekt
                                 break;
                             }
                         case "2":
-                            {
-                                
+                            {                             
                                 accountDB=accountTransfer(ID, accountDB, accountList);
                                 exitOption();
                                 break;
@@ -123,7 +122,6 @@ namespace Projekt
                                 {
                                     Thread.Sleep(400);
                                     Console.Write(".");
-
                                 }
                                 loginAtempt = 3;
                                 logOut = true;
@@ -137,40 +135,53 @@ namespace Projekt
                                 continue;
                             }
                     }
-
                 }
             }
-
         }
-        static void accountDisplay(int userID, double?[,] accDB, string[] accList) //Method to diplay user account info
-        {
-            
+
+        //Method to diplay user account info
+        static void accountDisplay(int userID, double?[,] accDB, string[] accList) 
+        {            
             Console.WriteLine("Konton: ");
             for (int i = 1; i < 6; i++)
             {
-                if (accDB[userID, i] != null)
+                if (accDB[userID, i] != null) //Loop to show user accounts, will not show accounts the owner don't own yet
                 {
-                    int listFix = i - 1;
-
+                    int listFix = i - 1; //Account name array starts at 0, ID at 1
                     Console.WriteLine("{0}. {1}: {2} SEK",i, accList[listFix], accDB[userID, i]);
-
                 }
             }
-
         }
-        static double?[,] accountTransfer(int userID, double?[,] accDB, string[] accList) //Method to transfer money between accounts
+
+        //Method to transfer money between accounts
+        static double?[,] accountTransfer(int userID, double?[,] accDB, string[] accList) 
             {
-            
+            int fromAccount = 0; //PH value
+            int toAccount = 0;  //PH value
+            int listfixFrom = 0; //PH value
+            int listfixTo = 0; //PH value
+            bool toLow = true;
             Console.Clear();
             Console.WriteLine("Överförning mellan konton");
-            Console.WriteLine("Välj vilket konto du vill flytta pengar FRÅN");
-            int fromAccount = getaccountID(userID, accDB, accList);
-            Console.WriteLine("Välj vilket konto du vill flytta pengar TILL");
-            int toAccount = getaccountID(userID, accDB, accList);
-            int listfixFrom = fromAccount - 1;
-            int listfixTo = toAccount - 1;
-            Console.WriteLine("Från: {0}: {1} SEK", accList[listfixFrom], accDB[userID,fromAccount]);
-            Console.WriteLine("Till: {0}: {1} SEK", accList[listfixTo], accDB[userID,toAccount]);
+            while (toLow == true)
+            {
+                Console.WriteLine("Välj vilket konto du vill flytta pengar FRÅN");
+                fromAccount = getaccountID(userID, accDB, accList);
+                Console.WriteLine("Välj vilket konto du vill flytta pengar TILL");
+                toAccount = getaccountID(userID, accDB, accList);
+                listfixFrom = fromAccount - 1;
+                listfixTo = toAccount - 1;
+                if (listfixFrom < 0 || listfixTo < 0)
+                {
+                    Console.WriteLine("Välj ett konto i listan.");
+                }
+                else
+                {
+                    toLow = false;
+                    Console.WriteLine("Från: {0}: {1} SEK", accList[listfixFrom], accDB[userID, fromAccount]);
+                    Console.WriteLine("Till: {0}: {1} SEK", accList[listfixTo], accDB[userID, toAccount]);
+                }
+            }
             bool numberBool=false;
             double amountTransfer = 0;
             while (numberBool == false)
@@ -207,39 +218,39 @@ namespace Projekt
                 bool approveBool = false;
                 while (approveBool == false)
                     {
-                    Console.WriteLine("Skriv 'Godkänn' för att starta överföringen.\nSkriv 'Avbryt' för att avbryta");
-                    string approve = Console.ReadLine().ToUpper();
-                    if (approve == "GODKÄNN")
-                    {
-                        approveBool = true;
-                        accDB[userID, fromAccount] = accDB[userID, fromAccount] - amountTransfer;
-                        accDB[userID, toAccount] = accDB[userID, toAccount] + amountTransfer;
-                        Console.WriteLine("Överföringen är genomförd");
-                        Console.WriteLine("Nytt saldo:");
-                        Console.WriteLine("{0}: {1} SEK", accList[listfixFrom], accDB[userID, fromAccount]);
-                        Console.WriteLine("{0}: {1} SEK", accList[listfixTo], accDB[userID, toAccount]);
+                        Console.WriteLine("Skriv 'Godkänn' för att starta överföringen.\nSkriv 'Avbryt' för att avbryta");
+                        string approve = Console.ReadLine().ToUpper();
+                        if (approve == "GODKÄNN")
+                        {
+                            approveBool = true;
+                            accDB[userID, fromAccount] = accDB[userID, fromAccount] - amountTransfer;
+                            accDB[userID, toAccount] = accDB[userID, toAccount] + amountTransfer;
+                            Console.WriteLine("Överföringen är genomförd");
+                            Console.WriteLine("Nytt saldo:");
+                            Console.WriteLine("{0}: {1} SEK", accList[listfixFrom], accDB[userID, fromAccount]);
+                            Console.WriteLine("{0}: {1} SEK", accList[listfixTo], accDB[userID, toAccount]);
+                        }
+                        else if (approve == "AVBRYT")
+                        {
+                            approveBool = true;                      
+                        }
+                        else
+                        {
+                            Console.WriteLine("Skriv 'Godkänn' eller 'Avbryt'.");
+                        }
                     }
-                    else if (approve == "AVBRYT")
-                    {
-                        approveBool = true;
-                        
-                    }
-                    else
-                    {
-                        Console.WriteLine("Skriv 'Godkänn' eller 'Avbryt'.");
-                    }
-                    }
-
             }
             return accDB;
         }
-        static int getaccountID(int userID, double?[,] accDB, string[] accList) //Method to get accountID without fail
+
+        //Method to get accountID without fail
+        static int getaccountID(int userID, double?[,] accDB, string[] accList) 
         {
             bool numberBool = false;
             bool accountBool = true;
             int accountInt = 0;
 
-            while (numberBool == false || accountBool == false)
+            while (numberBool == false || accountBool == false) //Start of main loop
             {
                 accountDisplay(userID, accDB, accList);                
                 Console.WriteLine("Välj konto");
@@ -254,19 +265,13 @@ namespace Projekt
                     Console.WriteLine("Skriv en siffra");
                     numberBool = false;
                 }
-
-
                 if (numberBool == true)
                 {
-                    if (accountInt < 6)
+                    if (accountInt < 6 && accountInt >0)
                     {
-
-
                         if (accDB[userID, accountInt] != null)
                         {
-                            accountBool = true;
-
-                            
+                            accountBool = true;                          
                         }
                         else
                         {
@@ -284,18 +289,21 @@ namespace Projekt
                 }
             }
             return accountInt;
-        }        
+        }
 
-            
-            
-        
-        static void exitOption() //Method to go back to main menu
+
+
+        //Method to go back to main menu
+        static void exitOption() 
         {
             Console.WriteLine("\n\nTryck enter för att gå tillbaka till menyn");
             Console.ReadLine();
             Console.Clear();
         }
-        static double?[,] withdraw(int userID, double?[,] accDB, string[] accList, string[,] accounts)
+
+
+        //Withdraw method
+        static double?[,] withdraw(int userID, double?[,] accDB, string[] accList, string[,] accounts) 
         {
             Console.WriteLine("Från vilket konto vill du ta ut pengar?");
             int account = getaccountID(userID, accDB, accList);
@@ -306,7 +314,6 @@ namespace Projekt
             {
                 Console.WriteLine("Hur mycket vill du ta ut?");
                 string amountTransferString = Console.ReadLine();
-
                 try
                 {
                     amountTransfer = Convert.ToDouble(amountTransferString);
@@ -345,8 +352,7 @@ namespace Projekt
                         
                         Console.WriteLine("Överföringen är genomförd");
                         Console.WriteLine("Nytt saldo:");
-                        Console.WriteLine("{0}: {1} SEK", accList[listfix], accDB[userID, account]);
-                        
+                        Console.WriteLine("{0}: {1} SEK", accList[listfix], accDB[userID, account]);                       
                     }
                     else if (approve == "AVBRYT")
                     {
@@ -360,7 +366,6 @@ namespace Projekt
                         
                     }
                 }
-
             }
             return accDB;
         }
