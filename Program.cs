@@ -357,13 +357,11 @@ namespace Projekt
                     else if (approve == "AVBRYT")
                     {
                         approveBool = true;
-
                     }
                     else
                     {
                         Console.Clear();
-                        Console.WriteLine("Fel pinkod.");
-                        
+                        Console.WriteLine("Fel pinkod.");                       
                     }
                 }
             }
