@@ -3,6 +3,8 @@
             Author: Dan Gustafsson, SUT21.
             "Individuellt projekt - Enkel internetbank/bankomat"
             Final project of "Utveckling med C# och .NET"
+            
+            INLÄMNING UTAN EXTAUTMANINGAR
 */
 using System;
 using System.Threading;
