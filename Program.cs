@@ -18,7 +18,7 @@ namespace Projekt
             //userDB (string)
             string[,] userDB = new string[5, 4]
 
-            {//     USERID      LOGIN        PIN         NAME
+            {//     ID         USERNAME      PIN         NAME
                 {   "0",        "EP40",     "4040",     "Elias Pettersson" },
                 {   "1",        "NH21",     "2121",     "Nils Höglander" },
                 {   "2",        "BH53",     "5353",     "Bo Horvat" },
@@ -28,7 +28,7 @@ namespace Projekt
 
             //accountDB (double)
             double?[,] accountDB = new double?[5, 6]
-            {//     USERID      Lönekonto   Sparkonto   Aktiekonto  Bilkonto    Semesterkonto             
+            {//     ID          Lönekonto   Sparkonto   Aktiekonto  Bilkonto    Semesterkonto             
                 {   0,          4040.4,     null,       null,       null,       null},
                 {   1,          2121.21,    21.21,      null,       null,       null},
                 {   2,          5353.53,    53.53,      53000,      null,       null},
@@ -51,7 +51,7 @@ namespace Projekt
                 while (loginAtempt > 0)
                 {
                     Console.WriteLine("Vänligen mata in dina inloggningsuppgifter.");
-                    Console.WriteLine("Användar-ID: ");
+                    Console.WriteLine("Username: ");
                     string user = Console.ReadLine();
                     Console.WriteLine("PIN: ");
                     string pinString = Console.ReadLine();
@@ -71,7 +71,7 @@ namespace Projekt
                     {
                         loginAtempt--;
                         Console.Clear();
-                        Console.WriteLine("Fel ID eller PIN. \nVänligen försök igen.\n");
+                        Console.WriteLine("Fel Username eller PIN. \nVänligen försök igen.\n");
                         if (loginAtempt > 0)
                         {
                             Console.WriteLine("Du har {0} försök kvar innan programmet stängs.\n", loginAtempt);
